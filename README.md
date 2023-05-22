@@ -1,34 +1,30 @@
 <p align="center">
-  <a href="https://github.com/marefati110/strapi-plugin-elastic" rel="noopener">
- <img src="https://i.ibb.co/zG6Nj3g/Untitled-1.jpg" alt="Project logo"></a>
+  <a href="https://github.com/cillaeslopes/strapi-elastic" rel="noopener">
+ <img src="https://i.ibb.co/zG6Nj3g/Untitled-1.jpg" alt="Project logo" width=800></a>
   <br/>
   <br/>
-  <img width="90%" align="center" src="https://i.ibb.co/PwdPtP7/2020-12-21-22-18.png" alt="plugin" border="1">
 </p>
 
-<div align="center">
-
-[![GitHub issues](https://img.shields.io/github/issues/marefati110/strapi-plugin-elasticsearch?style=flat-square)](https://github.com/marefati110/strapi-plugin-elasticsearch/issues)
-[![GitHub forks](https://img.shields.io/github/forks/marefati110/strapi-plugin-elasticsearch)](https://github.com/marefati110/strapi-plugin-elasticsearch/network)
-[![GitHub stars](https://img.shields.io/github/stars/marefati110/strapi-plugin-elasticsearch)](https://github.com/marefati110/strapi-plugin-elasticsearch/stargazers)
-[![GitHub license](https://img.shields.io/github/license/marefati110/strapi-plugin-elasticsearch)](https://github.com/marefati110/strapi-plugin-elasticsearch)
-
-</div>
 <hr >
 <h4 align="center">
-tested on strapi v3.x
+tested on strapi v4.x
 
-latest test: v3.4.0
+latest test: v4.10.2
 
 </h4>
 <bt/>
 <h4 align="center">
-  This plugin has not been tested on mongodb
+  This plugin has been tested on postgres
 </h4>
 <hr/>
 <br/>
 <p align="center"> 
   The purpose of developing this plugin is to use the elastic search engine in Strapi to help the application development process
+</p>
+
+<p align="center">
+  This plugin has been developed from [plugin](https://www.npmjs.com/package/@zrpaplicacoes/strapi-plugin-elasticsearch) without source repo.
+  The plugin has been developed for strapi v4 and Elasticsearch v7 and have been migrated to Elasticsearch v8
 </p>
 
 ## 📝 Table of Contents
@@ -57,11 +53,11 @@ Install plugin
 
 - Go to the project path
 
-  - `cd PROJECT/plugins`
+  - `cd PROJECT/src/plugins`
 
 - Clone the project
 
-  - `git submodule add https://github.com/marefati110/strapi-plugin-elasticsearch.git ./elastic`
+  - `git submodule add https://github.com/zaycker/strapi-plugin-elastic ./elastic`
 
 - Install dependencies
 
@@ -81,19 +77,23 @@ After the first run of the project, it creates a config file at `PROJECT/config/
 
 By default, syncing occurs in two ways
 
-The answer of any request that makes a change in the model is stored in Elasticsearch this is especially true for the Strap panel admin
+The answer of any request that makes a change in the model is stored in Elasticsearch this is especially true for the
+Strap panel admin
 
-Or in response to any request, search for the pk of model the model in which the change was made, and after retrieving the information from the database, stores it in the elasticsearch
+Or in response to any request, search for the pk of model the model in which the change was made, and after retrieving
+the information from the database, stores it in the elasticsearch
 
 In the following, solutions are prepared for more complex scenarios.
 
 After installing the plugin and running it, it creates an config file in the `PROJECT/config/elasticsearch.js`
 
-In the connections section, the settings related to the connection to the elasticsearch are listed, there is also a help link
+In the connections section, the settings related to the connection to the elasticsearch are listed, there is also a help
+link
 
 In the setting section, there are the initial settings related to the elastic plugin.
 
-In the models section for all models in the `Project/api/**` path there is a model being built and you can change the initial settings
+In the models section for all models in the `Project/src/api/**` path there is a model being built and you can change
+the initial settings
 
 <hr/>
 
@@ -226,9 +226,9 @@ there is some functions for help
 const articleData = { title: 'title', content: 'content' };
 const article = await strapi.query('article').create(articleData);
 
-strapi.elastic.createOrUpdate('article', { data: article, id: article.id });
+strapi.$es.createOrUpdate('article', { data: article, id: article.id });
 // or
-strapi.elastic.migrateById('article', { id: article.id }); // execute new query
+strapi.$es.migrateById('article', { id: article.id }); // execute new query
 ```
 
 and for delete data
@@ -237,20 +237,20 @@ and for delete data
 const articleId = 1;
 const article = await strapi.query('article').delete(articleData);
 
-strapi.elastic.destroy('article', { id: articleID });
+strapi.$es.destroy('article', { id: articleID });
 ```
 
 # Functions <a name="functions"></a>
 
 | Command                         | Description                    |           example            |
 | :------------------------------ | :----------------------------- | :--------------------------: |
-| `strapi.elastic`                | official elasticsearch package |     [example](#elastic)      |
-| `strapi.elastic.createOrUpdate` | Create to update data          | [example](#create_or_update) |
-| `strapi.elastic.findOne`        | Find specific data by id       |     [example](#findOne)      |
-| `strapi.elastic.destroy`        | delete data                    |     [example](#destroy)      |
-| `strapi.elastic.migrateById`    | migrate data                   |   [example](#migrateById)    |
-| `strapi.elastic.migrateModel`   | migrate specific data          |   [example](#migrateModel)   |
-| `strapi.elastic.models`         | migrate all enabled models     |      [example](#models)      |
+| `strapi.$es`                | official elasticsearch package |     [example](#elastic)      |
+| `strapi.$es.createOrUpdate` | Create to update data          | [example](#create_or_update) |
+| `strapi.$es.findOne`        | Find specific data by id       |     [example](#findOne)      |
+| `strapi.$es.destroy`        | delete data                    |     [example](#destroy)      |
+| `strapi.$es.migrateById`    | migrate data                   |   [example](#migrateById)    |
+| `strapi.$es.migrateModel`   | migrate specific data          |   [example](#migrateModel)   |
+| `strapi.$es.models`         | migrate all enabled models     |      [example](#models)      |
 | `strapi.log`                    | log data to elasticsearch      |     [example](#logging)      |
 
 # Api <a name="api"></a>
@@ -264,19 +264,19 @@ strapi.elastic.destroy('article', { id: articleID });
 
 ### elastic
 
-For use official Elasticsearch package we can use `strapi.elastic`, and can access builtin function
+For use official Elasticsearch package we can use `strapi.$es`, and can access builtin function
 [elasticsearch reference api](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html)
 
 ```js
-const count = strapi.elastic.count({ index: 'article' }); // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#_count
+const count = strapi.$es.count({ index: 'article' }); // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#_count
 
-const article = strapi.elastic.get({ index: 'article', id: 1 }); // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#_get
+const article = strapi.$es.get({ index: 'article', id: 1 }); // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/api-reference.html#_get
 ```
 
 ### CreateOrUpdate <a name="create_or_update"></a>
 
 ```js
-const result = strapi.elastic.createOrUpdate('article', {
+const result = strapi.$es.createOrUpdate('article', {
   id: 1,
   data: { title: 'title', content: 'content' },
 });
@@ -285,29 +285,29 @@ const result = strapi.elastic.createOrUpdate('article', {
 ### findOne <a name="findOne"></a>
 
 ```js
-const result = strapi.elastic.findOne('article', { id: 1 });
+const result = strapi.$es.findOne('article', { id: 1 });
 ```
 
 ### destroy <a name="destroy"></a>
 
 ```js
-const result_one = strapi.elastic.destroy('article', { id: 1 });
+const result_one = strapi.$es.destroy('article', { id: 1 });
 // or
-const result_two = strapi.elastic.destroy('article', { id_in: [1, 2, 3] });
+const result_two = strapi.$es.destroy('article', { id_in: [1, 2, 3] });
 ```
 
 ### migrateById <a name="migrateById"></a>
 
 ```js
-const result_one = strapi.elastic.migrateById('article', { id: 1 });
+const result_one = strapi.$es.migrateById('article', { id: 1 });
 
-const result_two = strapi.elastic.migrateById('article', { id_in: [1, 2, 3] });
+const result_two = strapi.$es.migrateById('article', { id_in: [1, 2, 3] });
 ```
 
 ### migrateModel <a name="migrateModel"></a>
 
 ```js
-const result = strapi.elastic.migrateModel('article', {
+const result = strapi.$es.migrateModel('article', {
   conditions, // optional
 });
 ```
@@ -315,7 +315,7 @@ const result = strapi.elastic.migrateModel('article', {
 ### migrateModels <a name="migrateModels"></a>
 
 ```js
-const result = strapi.elastic.migrateModels({
+const result = strapi.$es.migrateModels({
   conditions, // optional (the conditions apply on all models)
 });
 ```
@@ -324,37 +324,37 @@ const result = strapi.elastic.migrateModels({
 
 strapi use Pino to logging but can store logs or send it to elasticsearch
 
-at now wen can send logs to elasticsearch by `strapi.elastic.log` there is no difference between `strapi.elastic.log` with `strapi.log` to call functions.
+at now wen can send logs to elasticsearch by `strapi.$es.log` there is no difference between `strapi.$es.log` with `strapi.log` to call functions.
 
 ```js
 strapi.log.info('log message in console');
-strapi.elastic.log.info('log message console and store it to elasticsearch');
+strapi.$es.log.info('log message console and store it to elasticsearch');
 
 strapi.log.debug('log message');
-strapi.elastic.log.debug('log message console and store it to elasticsearch');
+strapi.$es.log.debug('log message console and store it to elasticsearch');
 
 strapi.log.warn('log message');
-strapi.elastic.log.warn('log message console and store it to elasticsearch');
+strapi.$es.log.warn('log message console and store it to elasticsearch');
 
 strapi.log.error('log message');
-strapi.elastic.log.error('log message console and store it to elasticsearch');
+strapi.$es.log.error('log message console and store it to elasticsearch');
 
 strapi.log.fatal('log message');
-strapi.elastic.log.fatal('log message console and store it to elasticsearch');
+strapi.$es.log.fatal('log message console and store it to elasticsearch');
 ```
 
 Also there is some more options
 
 ```js
 // just send log to elastic and avoid to display in console
-strapi.elastic.log.info('some message', { setting: { show: false } });
+strapi.$es.log.info('some message', { setting: { show: false } });
 
 // just display  relations, // optional ni console and avoid to save it to elastic search
-strapi.elastic.log.info('some message', { setting: { saveToElastic: false } });
+strapi.$es.log.info('some message', { setting: { saveToElastic: false } });
 
 // send more data to elasticsearch
 const logData = { description: 'description' };
-strapi.elastic.log.info('some message', logData);
+strapi.$es.log.info('some message', logData);
 ```
 
 **By default `strapi.log` send some metaData to elasticsearch such as `free memory`, `cpu load avg`, `current time`, `hostname` ,...**
@@ -372,7 +372,7 @@ module.exports = {
       .format('YYYY-MM-DD HH:mm:ss');
 
     // currentTime
-    await strapi.elastic.migrateModels({
+    await strapi.$es.migrateModels({
       conditions: {
         updated_at_gt: updateTime,
         /* to utilise Draft/Publish feature & migrate only published entities 
@@ -388,3 +388,6 @@ module.exports = {
 ### ✍️ Authors <a name = ""></a>
 
 - [@marefati110](https://github.com/marefati110)
+- [@cillaeslopes](https://github.com/cillaeslopes)
+- [@nayara](https://github.com/nayara)
+- [@zaycker](https://github.com/zaycker)
