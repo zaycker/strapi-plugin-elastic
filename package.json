@@ -1,9 +1,9 @@
 {
-  "name": "strapi-plugin-elastic",
-  "version": "1.5.0",
+  "name": "@zaycker/strapi-plugin-elastic",
+  "version": "1.5.3",
   "description": "this package help you easily send your data to elasticsearch.",
   "strapi": {
-    "name": "Elasticsearch",
+    "name": "elasticsearch",
     "icon": "plug",
     "description": "this package help you easily send your data to elasticsearch.",
     "kind": "plugin",

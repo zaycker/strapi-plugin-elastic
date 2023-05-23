@@ -52,7 +52,7 @@ module.exports = {
       };
     }
 
-    status.hasMapping = status.created && !_.isEmpty(map.body[index]);
+    status.hasMapping = status.created && !_.isEmpty(map[index]);
 
     try {
       data = await strapi.$es.find(index, _limit, _start);
@@ -60,11 +60,9 @@ module.exports = {
       return ctx.send({ data: null, total: 0, status });
     }
 
-    if (data.statusCode !== 200) return ctx.badRequest();
-
     return ctx.send({
-      data: sanitizeHits(data.body.hits.hits),
-      total: count && count.body && count.body.count,
+      data: sanitizeHits(data.hits.hits),
+      total: count && count.count,
       status,
     });
   },

@@ -1,5 +1,3 @@
-const pluginPkg = require('../../package.json');
-
-const pluginId = pluginPkg.name.replace(/^@zrpaplicacoes\/strapi-plugin-/i, '');
+const pluginId = 'elasticsearch';
 
 module.exports = pluginId;
